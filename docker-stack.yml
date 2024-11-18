@@ -13,7 +13,7 @@ services:
   cronjob:
     image: crazymax/swarm-cronjob
     environment:
-      TZ: ${TZ:-UTC}
+      TZ: "${TZ:-UTC}"
       LOG_LEVEL: "info"
       LOG_JSON: "false"
     volumes:
