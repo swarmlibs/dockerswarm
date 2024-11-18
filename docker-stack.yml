@@ -10,17 +10,16 @@ services:
   # crazy-max/swarm-cronjob
   # https://github.com/crazy-max/swarm-cronjob
   # ====================================================
-  cronjob_service:
+  cronjob:
     image: crazymax/swarm-cronjob
     environment:
-      - "TZ=${TZ:-UTC}"
-      - "LOG_LEVEL=info"
-      - "LOG_JSON=false"
+      TZ: ${TZ:-UTC}"
+      LOG_LEVEL: "info"
+      LOG_JSON: "false"
     volumes:
       - type: bind
         target: /var/run/docker.sock
         source: /var/run/docker.sock
-        read_only: false
     deploy:
       mode: replicated
       replicas: 1
@@ -41,4 +40,54 @@ services:
       placement:
         constraints:
           - node.role == manager
+    logging: *x-default-logging
+
+  # ====================================================
+  # containrrr/shepherd
+  # https://github.com/containrrr/shepherd
+  # ====================================================
+  shepherd:
+    image: containrrr/shepherd
+    environment:
+      # Beware YAML gotchas regarding quoting:
+      # With KEY: 'VALUE', quotes are part of yaml syntax and thus get stripped
+      # but with KEY='VALUE', they are part of the value and stay there,
+      # causing problems!
+      VERBOSE: 'true'
+      TZ: '${TZ:-UTC}'
+      REGISTRY_HOST:
+      REGISTRY_USER:
+      REGISTRY_PASSWORD:
+      FILTER_SERVICES: "label=shepherd.enable=true"
+      SLEEP_TIME: ${SLEEP_TIME:-5m}
+      WITH_REGISTRY_AUTH:
+      WITH_INSECURE_REGISTRY:
+      UPDATE_OPTIONS: ${UPDATE_OPTIONS:---update-delay=30s}
+      ROLLBACK_OPTIONS: ${ROLLBACK_OPTIONS:---rollback-delay=0s}
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+        delay: 5s
+      update_config:
+        parallelism: 1
+        delay: 10s
+      rollback_config:
+        parallelism: 1
+        delay: 10s
+      resources:
+        limits:
+          memory: 32M
+        reservations:
+          memory: 16M
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "shepherd.enable=false"
     logging: *x-default-logging
