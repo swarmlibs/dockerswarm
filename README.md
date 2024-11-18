@@ -1,8 +1,9 @@
 # About
-This stack integrate Docker Swarm with extra features such as cron jobs (TBD) and others.
+This stack integrate Docker Swarm with extra features such as cron jobs, automatically updating deployed services and others.
 
 ## Features
 - Ability to run cron like job using [crazymax/swarm-cronjob]
+- Automatically updating your services whenever their image is refreshed using [containrrr/shepherd]
 
 ## Usages
 
@@ -37,3 +38,4 @@ docker stack rm dockerswarm
 ```
 
 [crazymax/swarm-cronjob]: https://github.com/crazy-max/swarm-cronjob
+[containrrr/shepherd]: https://github.com/containrrr/shepherd
