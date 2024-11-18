@@ -13,7 +13,7 @@ services:
   cronjob:
     image: crazymax/swarm-cronjob
     environment:
-      TZ: ${TZ:-UTC}"
+      TZ: ${TZ:-UTC}
       LOG_LEVEL: "info"
       LOG_JSON: "false"
     volumes:
@@ -53,17 +53,17 @@ services:
       # With KEY: 'VALUE', quotes are part of yaml syntax and thus get stripped
       # but with KEY='VALUE', they are part of the value and stay there,
       # causing problems!
-      VERBOSE: 'true'
-      TZ: '${TZ:-UTC}'
+      VERBOSE: "true"
+      TZ: "${TZ:-UTC}"
       REGISTRY_HOST:
       REGISTRY_USER:
       REGISTRY_PASSWORD:
       FILTER_SERVICES: "label=shepherd.enable=true"
-      SLEEP_TIME: ${SLEEP_TIME:-5m}
+      SLEEP_TIME: "${SLEEP_TIME:-5m}"
       WITH_REGISTRY_AUTH:
       WITH_INSECURE_REGISTRY:
-      UPDATE_OPTIONS: ${UPDATE_OPTIONS:---update-delay=30s}
-      ROLLBACK_OPTIONS: ${ROLLBACK_OPTIONS:---rollback-delay=0s}
+      UPDATE_OPTIONS: "${UPDATE_OPTIONS:---update-delay=30s}"
+      ROLLBACK_OPTIONS: "${ROLLBACK_OPTIONS:---rollback-delay=0s}"
     volumes:
       - type: bind
         source: /var/run/docker.sock
